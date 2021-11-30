@@ -1,8 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"os"
+	"strings"
 )
 
 /*This var is a pointer towards template.Template that is a
@@ -35,13 +40,91 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userBanner := r.FormValue("uBanner")
 	userString := r.FormValue("uString")
 
+	splitLines := SplitLines(userString)
+
+	file, err := os.Open("standard.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	var ascii_temp []string
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		ascii_temp = append(ascii_temp, scanner.Text())
+		// fmt.Println(scanner.Text())
+	}
+	ascii_map := make(map[int][]string) // makes the map to hold ascii chars
+	start := 32
+	for i := 0; i < len(ascii_temp); i++ {
+
+		if len(ascii_map[start]) == 9 {
+			start++
+		}
+
+		ascii_map[start] = append(ascii_map[start], ascii_temp[i])
+	}
+
+	var sString []string
+
+	for j, val := range splitLines {
+		for i := 1; i < 9; i++ {
+			for k := 0; k < len(val); k++ {
+				// if i == 8 && k == len(val)-1 {
+				// 	fmt.Println("hey")
+				// }
+				sString = append(sString, ascii_map[int(splitLines[j][k])][i])
+			}
+			sString = append(sString, "\n")
+			// if j == len(splitLines)-1 {
+			// 	fmt.Println()
+			// }
+			// fmt.Println()
+		}
+	}
+
+	sAscii := strings.Join(sString, "")
+
 	d := struct {
-		Banner string
-		String string
+		Banner  string
+		String  string
+		uString string
 	}{
-		Banner: userBanner,
-		String: userString,
+		Banner:  userBanner,
+		String:  userString,
+		uString: sAscii,
 	}
 
 	tpl.ExecuteTemplate(w, "ascii-art.gohtml", d)
+}
+
+func SplitLines(s string) [][]byte {
+	var count int
+
+	for i := 0; i < len(s); i++ {
+		if s[i] == 'n' && s[i-1] == '\\' {
+			count++
+		}
+	}
+	splitString := []byte(s)
+	splitLines := make([][]byte, count+1)
+
+	j := 0
+
+	for i := 0; i < len(splitLines); i++ {
+		// fmt.Println("hi")
+		for j < len(splitString) {
+			// fmt.Println("hi2 ", splitString[j])
+			if splitString[j] == 'n' && splitString[j-1] == '\\' {
+				j++
+				splitLines[i] = splitLines[i][:len(splitLines[i])-1]
+				break
+			}
+			splitLines[i] = append(splitLines[i], splitString[j])
+			j++
+		}
+	}
+	fmt.Println(splitLines)
+	return splitLines
 }
