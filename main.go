@@ -74,26 +74,29 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 				// if i == 8 && k == len(val)-1 {
 				// 	fmt.Println("hey")
 				// }
+				// fmt.Print(ascii_map[int(splitLines[j][k])][i])
 				sString = append(sString, ascii_map[int(splitLines[j][k])][i])
 			}
 			sString = append(sString, "\n")
 			// if j == len(splitLines)-1 {
-			// 	fmt.Println()
+			// fmt.Println()
 			// }
 			// fmt.Println()
 		}
 	}
 
 	sAscii := strings.Join(sString, "")
+	fmt.Fprintf(w, sAscii)
+	// fmt.Print(sAscii)
 
 	d := struct {
-		Banner  string
-		String  string
-		uString string
+		Banner string
+		String string
+		sAscii string
 	}{
-		Banner:  userBanner,
-		String:  userString,
-		uString: sAscii,
+		Banner: userBanner,
+		String: userString,
+		sAscii: sAscii,
 	}
 
 	tpl.ExecuteTemplate(w, "ascii-art.gohtml", d)
@@ -125,6 +128,6 @@ func SplitLines(s string) [][]byte {
 			j++
 		}
 	}
-	fmt.Println(splitLines)
+	// fmt.Println(splitLines)
 	return splitLines
 }
