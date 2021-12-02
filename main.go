@@ -37,12 +37,12 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userBanner := r.FormValue("uBanner")
+	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
 	splitLines := SplitLines(userString)
 
-	file, err := os.Open("standard.txt")
+	file, err := os.Open(userBanner + ".txt")
 	if err != nil {
 		log.Fatal(err)
 	}
