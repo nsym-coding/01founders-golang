@@ -40,6 +40,10 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
+	if strings.Contains(userString, "\n") {
+		userString = strings.Replace(userString, "\r\n", " ", -1)
+	}
+
 	splitLines := SplitLines(userString)
 
 	file, err := os.Open(userBanner + ".txt")
