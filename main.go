@@ -37,12 +37,16 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userBanner := r.FormValue("uBanner")
+	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
-	splitLines := SplitLines(userString)
+	if strings.Contains(userString, "\\n") {
+		userString = strings.Replace(userString, "\r\n", "\\n", -1)
+	}
 
-	file, err := os.Open("standard.txt")
+	// splitLines := SplitLines(userString)
+
+	file, err := os.Open(userBanner + ".txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,27 +72,25 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 
 	var sString []string
 
-	for j, val := range splitLines {
-		for i := 1; i < 9; i++ {
-			for k := 0; k < len(val); k++ {
-				// if i == 8 && k == len(val)-1 {
-				// 	fmt.Println("hey")
-				// }
-				// fmt.Print(ascii_map[int(splitLines[j][k])][i])
-				sString = append(sString, ascii_map[int(splitLines[j][k])][i])
-			}
-			sString = append(sString, "\n")
-			// if j == len(splitLines)-1 {
-			// fmt.Println()
+	// for j, val := range splitLines
+	for i := 1; i < 9; i++ {
+		for k := 0; k < len(userString); k++ {
+			// if i == 8 && k == len(val)-1 {
+			// 	fmt.Println("hey")
 			// }
-			// fmt.Println()
+			// fmt.Print(ascii_map[int(splitLines[j][k])][i])
+			sString = append(sString, ascii_map[int(userString[k])][i])
 		}
+		sString = append(sString, "\n")
+		// if j == len(splitLines)-1 {
+		// fmt.Println()
+		// }
+		// fmt.Println()
 	}
 
 	sAscii := strings.Join(sString, "")
 	fmt.Fprintf(w, sAscii)
 	// fmt.Print(sAscii)
-
 	d := struct {
 		Banner string
 		String string
@@ -102,32 +104,32 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "ascii-art.gohtml", d)
 }
 
-func SplitLines(s string) [][]byte {
-	var count int
+// func SplitLines(s string) [][]byte {
+// 	var count int
 
-	for i := 0; i < len(s); i++ {
-		if s[i] == 'n' && s[i-1] == '\\' {
-			count++
-		}
-	}
-	splitString := []byte(s)
-	splitLines := make([][]byte, count+1)
+// 	for i := 0; i < len(s); i++ {
+// 		if s[i] == 'n' && s[i-1] == '\\' {
+// 			count++
+// 		}
+// 	}
+// 	splitString := []byte(s)
+// 	splitLines := make([][]byte, count+1)
 
-	j := 0
+// 	j := 0
 
-	for i := 0; i < len(splitLines); i++ {
-		// fmt.Println("hi")
-		for j < len(splitString) {
-			// fmt.Println("hi2 ", splitString[j])
-			if splitString[j] == 'n' && splitString[j-1] == '\\' {
-				j++
-				splitLines[i] = splitLines[i][:len(splitLines[i])-1]
-				break
-			}
-			splitLines[i] = append(splitLines[i], splitString[j])
-			j++
-		}
-	}
-	// fmt.Println(splitLines)
-	return splitLines
-}
+// 	for i := 0; i < len(splitLines); i++ {
+// 		// fmt.Println("hi")
+// 		for j < len(splitString) {
+// 			// fmt.Println("hi2 ", splitString[j])
+// 			if splitString[j] == 'n' && splitString[j-1] == '\\' {
+// 				j++
+// 				splitLines[i] = splitLines[i][:len(splitLines[i])-1]
+// 				break
+// 			}
+// 			splitLines[i] = append(splitLines[i], splitString[j])
+// 			j++
+// 		}
+// 	}
+// 	// fmt.Println(splitLines)
+// 	return splitLines
+// }
