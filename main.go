@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -83,18 +82,18 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sAscii := strings.Join(sString, "")
-	fmt.Fprintf(w, sAscii)
+	SAscii := strings.Join(sString, "")
+	// fmt.Fprintf(w, sAscii)
 
 	// fmt.Print(sAscii)
 	d := struct {
 		Banner string
 		String string
-		sAscii string
+		SAscii string
 	}{
 		Banner: userBanner,
 		String: userString,
-		sAscii: sAscii,
+		SAscii: SAscii,
 	}
 
 	tpl.ExecuteTemplate(w, "ascii-art.gohtml", d)
