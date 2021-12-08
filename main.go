@@ -40,7 +40,6 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userString := r.FormValue("uString")
 
 	if strings.Contains(userString, "\n") {
-		// if strings.Contains(userString, "\\n") {
 		userString = strings.Replace(userString, "\r\n", "\\n", -1)
 	}
 
@@ -57,7 +56,6 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		ascii_temp = append(ascii_temp, scanner.Text())
-		// fmt.Println(scanner.Text())
 	}
 	ascii_map := make(map[int][]string) // makes the map to hold ascii chars
 	start := 32
@@ -73,7 +71,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	var sString []string
 
 	for j, val := range splitLines {
-		for i := 1; i < 9; i++ {
+		for i := 0; i < 9; i++ {
 			for k := 0; k < len(val); k++ {
 				sString = append(sString, ascii_map[int(splitLines[j][k])][i])
 			}
@@ -83,9 +81,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SAscii := strings.Join(sString, "")
-	// fmt.Fprintf(w, sAscii)
 
-	// fmt.Print(sAscii)
 	d := struct {
 		Banner string
 		String string
@@ -113,9 +109,8 @@ func SplitLines(s string) [][]byte {
 	j := 0
 
 	for i := 0; i < len(splitLines); i++ {
-		// fmt.Println("hi")
 		for j < len(splitString) {
-			// fmt.Println("hi2 ", splitString[j])
+
 			if splitString[j] == 'n' && splitString[j-1] == '\\' {
 				j++
 				splitLines[i] = splitLines[i][:len(splitLines[i])-1]
@@ -125,6 +120,6 @@ func SplitLines(s string) [][]byte {
 			j++
 		}
 	}
-	// fmt.Println(splitLines)
+
 	return splitLines
 }
