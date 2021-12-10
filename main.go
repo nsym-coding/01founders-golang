@@ -92,7 +92,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 		SAscii: SAscii,
 	}
 
-	tpl.ExecuteTemplate(w, "ascii-art.gohtml", d)
+	tpl.ExecuteTemplate(w, "index.gohtml", d)
 }
 
 func SplitLines(s string) [][]byte {
