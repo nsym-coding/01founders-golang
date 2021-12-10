@@ -2,12 +2,21 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 )
+
+// func HandleError() {
+// 	defer func() {
+// 		if err := recover(); err != nil {
+// 			log.Println("An internal server error has occurred:", err)
+// 		}
+// 	}()
+// }
 
 /*This var is a pointer towards template.Template that is a
 pointer to help process the html.*/
@@ -21,16 +30,28 @@ func init() {
 }
 
 func main() {
+	// HandleError()
 	http.HandleFunc("/", index)
 	http.HandleFunc("/ascii-art", asciiart)
 	http.ListenAndServe(":8080", nil)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	if r.URL.Path != "/" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+	} else {
+		tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	}
 }
 
 func asciiart(w http.ResponseWriter, r *http.Request) {
+
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Fprint(w, "500 An internal server error has occurred: ", err)
+		}
+	}()
+
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -38,6 +59,11 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 
 	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
+
+	if userBanner == "" || userString == "" {
+		http.Error(w, "400 bad request made : empty string!", http.StatusBadRequest)
+		return
+	}
 
 	if strings.Contains(userString, "\n") {
 		userString = strings.Replace(userString, "\r\n", "\\n", -1)
