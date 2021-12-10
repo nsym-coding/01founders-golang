@@ -2,21 +2,11 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 )
-
-// func HandleError() {
-// 	defer func() {
-// 		if err := recover(); err != nil {
-// 			log.Println("An internal server error has occurred:", err)
-// 		}
-// 	}()
-// }
 
 /*This var is a pointer towards template.Template that is a
 pointer to help process the html.*/
@@ -48,7 +38,8 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Fprint(w, "500 An internal server error has occurred: ", err)
+			http.Error(w, " An internal server error has occurred: 500", http.StatusInternalServerError)
+			return
 		}
 	}()
 
@@ -60,8 +51,8 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
-	if userBanner == "" || userString == "" {
-		http.Error(w, "400 bad request made : empty string!", http.StatusBadRequest)
+	if userBanner == "" || userString == "" || userString == "£" {
+		http.Error(w, "400 bad request made : empty or unrecognised string!", http.StatusBadRequest)
 		return
 	}
 
@@ -71,11 +62,11 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 
 	splitLines := SplitLines(userString)
 
-	file, err := os.Open(userBanner + ".txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
+	file, _ := os.Open(userBanner + ".txt")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	//defer file.Close()
 
 	var ascii_temp []string
 
