@@ -20,7 +20,7 @@ func init() {
 }
 
 func main() {
-	// HandleError()
+
 	http.HandleFunc("/", index)
 	http.HandleFunc("/ascii-art", asciiart)
 	http.ListenAndServe(":8080", nil)
@@ -63,10 +63,6 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	splitLines := SplitLines(userString)
 
 	file, _ := os.Open(userBanner + ".txt")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//defer file.Close()
 
 	var ascii_temp []string
 
