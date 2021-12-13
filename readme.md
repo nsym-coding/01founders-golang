@@ -7,11 +7,11 @@ Ascii Art is a program that consists of receiving a string as an argument and ou
 
 ## Authors:
 
-Messi & R9
+Arnold & Yonas
 
 ## Usage:
 
-![This is a gif of the usage] (usage.gif)
+![This is a gif of the usage](usage.gif)
 
 
 
