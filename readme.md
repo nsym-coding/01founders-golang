@@ -7,7 +7,7 @@ Ascii Art is a program that consists of receiving a string as an argument and ou
 
 ## Authors:
 
-Arnold & Yonas
+[Arnold Mutungi](https://git.learn.01founders.co/abmutungi) & [Yonas Million](https://git.learn.01founders.co/nsym_coding)
 
 ## Usage:
 
