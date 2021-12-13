@@ -51,7 +51,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
-	if userBanner == "" || userString == "" || userString == "£" {
+	if userBanner == "" || userString == "" || strings.Contains(userString, "£") == true {
 		http.Error(w, "400 bad request made : empty or unrecognised string!", http.StatusBadRequest)
 		return
 	}
