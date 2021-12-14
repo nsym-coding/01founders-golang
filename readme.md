@@ -11,6 +11,14 @@ Ascii Art is a program that consists of receiving a string as an argument and ou
 
 ## Usage:
 
+> Testing locally
+
+```sh
+go run main.go
+```
+
+Go to http://localhost:8080
+
 ![This is a gif of the usage](usage.gif)
 
 
