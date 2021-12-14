@@ -11,13 +11,16 @@ Ascii Art is a program that consists of receiving a string as an argument and ou
 
 ## Usage:
 
-> Testing locally
+To test locally run the following in the terminal
 
 ```sh
 go run main.go
 ```
 
-Go to http://localhost:8080
+Next, go to http://localhost:8080
+
+See in gif below how to turn any given string of text into ascii art
+
 
 ![This is a gif of the usage](usage.gif)
 
