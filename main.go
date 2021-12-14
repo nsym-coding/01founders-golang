@@ -26,6 +26,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+//Handler function for the index
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
@@ -34,6 +35,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//Handler function to handle the ascii art conversion
 func asciiart(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
@@ -54,6 +56,13 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	if userBanner == "" || userString == "" || strings.Contains(userString, "£") == true {
 		http.Error(w, "400 bad request made : empty or unrecognised string!", http.StatusBadRequest)
 		return
+	}
+
+	for i := 0; i < len(userString); i++ {
+		if userString[i] < 32 || userString[i] > 126 {
+			http.Error(w, "400 bad request made: empty or unrecognised string", http.StatusBadRequest)
+			return
+		}
 	}
 
 	if strings.Contains(userString, "\n") {
