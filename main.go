@@ -59,7 +59,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := 0; i < len(userString); i++ {
-		if userString[i] < 32 || userString[i] > 126 {
+		if userString[i] < 32 && userString[i] > 126 {
 			http.Error(w, "400 bad request made: empty or unrecognised string", http.StatusBadRequest)
 			return
 		}
