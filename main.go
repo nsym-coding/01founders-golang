@@ -16,12 +16,14 @@ var tpl *template.Template
 in the templates folder is parsed i.e. they all get looked through once and
 then stored in the memory ready to go when needed*/
 func init() {
-	tpl = template.Must(template.ParseGlob("templates/*gohtml"))
+	tpl = template.Must(template.ParseGlob("templates/*html"))
 }
 
 func main() {
+	fs := http.FileServer(http.Dir("./templates"))
 
-	http.HandleFunc("/", index)
+	http.Handle("/", fs)
+	http.HandleFunc("/index.html", index)
 	http.HandleFunc("/ascii-art", asciiart)
 	http.ListenAndServe(":8080", nil)
 }
@@ -31,7 +33,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
-		tpl.ExecuteTemplate(w, "index.gohtml", nil)
+		tpl.ExecuteTemplate(w, "index.html", nil)
 	}
 }
 
@@ -53,7 +55,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 	userBanner := r.FormValue("banner")
 	userString := r.FormValue("uString")
 
-	if userBanner == "" || userString == "" || strings.Contains(userString, "£") == true {
+	if userBanner == "" || userString == "" || strings.Contains(userString, "£") {
 		http.Error(w, "400 bad request made : empty or unrecognised string!", http.StatusBadRequest)
 		return
 	}
@@ -114,7 +116,7 @@ func asciiart(w http.ResponseWriter, r *http.Request) {
 		SAscii: SAscii,
 	}
 
-	tpl.ExecuteTemplate(w, "index.gohtml", d)
+	tpl.ExecuteTemplate(w, "ascii-art.html", d)
 }
 
 func SplitLines(s string) [][]byte {
